@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+<!-- Title Of page -->
+{% block 'title' %}Registration Page {% endblock 'title' %}
+
+{% block 'mainContent' %}
+<div class="container-fluid">
+    <div class="login d-flex align-items-center ">
+        <div class="col-12 col-lg-7 mx-auto">
+            <form action="." class="account-form p-4 rounded col-lg-10 mx-auto" method="POST">
+                {% csrf_token %}
+                <h3 class="mb-2 fw-bold">Create an account</h3>
+                <p class="mb-4">wellcome to Palav-Poshak</p>
+                <hr>
+                {{ form|crispy }}
+                <button class="btn btn-success btn-block py-2 mb-4 mt-5 fw500 w-100" type="submit">
+                    Register</button>
+                    <p class="text-center pb-3">
+                <a class="ml-4" href="{% url 'account:login' %}">Already have an account?</a>
+                    </p>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock 'mainContent' %}

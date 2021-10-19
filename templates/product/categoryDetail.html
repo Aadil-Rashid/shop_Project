@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+<!-- Title Of page -->
+
+{% block 'title' %}
+{% if category %}{{ category.name }}{% else %}Category Page{% endif %}
+{% endblock 'title' %}
+
+
+{% block stylesheet %}
+{% static 'css/home.css' %}
+{% endblock stylesheet %}
+<!-- my Main Content block -->
+{% block 'mainContent' %}
+<!-- This is card of my website -->
+<div class="container mt-5 small-container">
+    <h2 class='title'>Category: {{category.name|title}}</h2>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 container-fluid vh-100 ">
+            <div class="card cartelement" style="width: 18rem;">
+                <a href="{{ product.get_absolute_url }}"><img class="card-img-top" src="{{ product.image.url }}"
+                        alt="Card image cap"></a>
+                <div class="card-body">
+                        <h5 class="card-title">{{ product.title|slice:":30" }}...</h5>
+                    <p class="card-text">₹ {{product.price}}</p>
+                    <a href="{{ product.get_absolute_url }}">
+                        <button id="addButton" value="{{product.id}}" type="button" class="btn btn-success btn-sm"><b>Buy Now</b></button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock 'mainContent' %}

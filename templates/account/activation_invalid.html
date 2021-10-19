@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}  
+<!-- Title Of page -->
+{% block 'title' %}Invalid Activation{% endblock 'title' %}  
+
+{% block 'mainContent' %}
+
+<div class="container">
+    <div class='mb-5'>       
+        <h3 class="mb-4">Error</h3>
+        <p>Please contact our support team.</p>
+    </div>
+    <div class="border-top pt-3 text-center">
+        <small>                                        
+            <b class="mt-4">You Register once again</b><a class="ml-4" href="{% url 'account:register' %}"><h4 class="btn btn-primary btn-sm">Register</h4> </a>
+        </small>
+    </div>
+</div>
+
+{% endblock 'mainContent' %}

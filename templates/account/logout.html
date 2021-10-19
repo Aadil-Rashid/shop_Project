@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}  
+<!-- Title Of page -->
+{% block 'title' %} Logout Page {% endblock 'title' %}  
+{% block 'mainContent' %}
+
+    <div class="container text-center p-4">
+        <h2>You have successfully logged out</h2>
+        <hr>
+        <div class="border-top p-4">
+            <h5>
+                <b>login again to</b> <a class="ml-2" href="{% url 'account:login' %}"><button class="btn btn-success btn-sm">PalavPoshak</button></a>
+            </h5>
+        </div>
+        <hr>
+    </div>
+{% endblock 'mainContent' %}

@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!-- Title Of page -->
+{% block 'title' %}Cart Summary{% endblock 'title' %}
+
+{% block 'mainContent' %}
+
+<div class="container">
+   <div class="col-12">
+      <h1 class="h2">Your Cart</h1>
+   </div>
+   <div class="col-12">
+      <p> {{user.user_name|title}}, manage all items in your Cart</p>
+   </div>
+   <hr />
+</div>
+
+<div class="container">
+   <div class="row g-3" style="background-color: #d5cfdff3;">
+     {% if basket|length == 0 %}
+     <div class="col-12">Your basket is empty go to <a href="{% url 'product:home-page' %}"> Home Page</a></div>
+     {% else %}
+     <div class="col-12 bg-light p-3 d-flex justify-content-between" >
+       <div class="d-flex d-flex-inline" style="background-color: #d5cfdff3;">
+         <div class="pe-3">Order</div>
+         <div class="dropdown" >
+           <a class="text-reset text-decoration-none dropdown-toggle" href="#" role="link" id="dropdownLink"
+             data-bs-toggle="dropdown" aria-expanded="false">
+             Shipping options
+             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
+               class="bi bi-chevron-down" viewBox="0 0 16 16">
+               <path fill-rule="evenodd"
+                 d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+             </svg>
+           </a>
+           <ul class="dropdown-menu" aria-labelledby="dropdownLink">
+             <li class="item small">Next day delivery</li>
+             <li class="item small">Premimum delivery</li>
+           </ul>
+         </div>
+       </div>
+       <div class="text-end" style="background-color: #d5cfdff3;">
+         <div class="">Sub Total: <span class="fw-bold">₹</span>
+           <div id="subtotal" class="d-inline-flex fw-bold">{{basket.get_subtotal_price}}</div>
+         </div>
+         <div id="">Shipping <span class="small">(Next day delivery)</span>: <span class="fw-bold">₹ 11.50</span></div>
+         <div class="pt-2">Total to pay: <span class="fw-bold h5">₹</span><span id="total"
+             class="fw-bold h5">{{basket.get_total_price}}</span></div>
+       </div>
+     </div>
+     <div class="col-md-4 col-lg-3 order-md-last m-4 order-3" >
+       <div class="d-grid gap-2 ">
+         <form method="POST" action="{% url 'payment:payment-page' %}">
+            {% csrf_token %}
+            <button class="btn btn-success fw-bold" type="submit">Checkout</button>
+         </form>
+         <div>
+         <button class="btn btn-primary fw-bold" type="button">Add to wish list</button>
+         </div>
+       </div>
+     </div>
+     <div class="col-md-7 col-lg-8 p-0" >
+       {% for item in basket %}
+       {% with product=item.product %}
+       <div style="background-color: #d5cfdff3;" class="card mb-3 border-0 product-item" data-index="{{product.id}}">
+         <div class="row g-0">
+           <div class="col-md-2 d-none d-md-block">
+             <img class="img-fluid mx-auto d-block" alt="Responsive image" src="{{ product.image.url }}" />
+           </div>
+           <div class="col-md-10 ps-md-3">
+             <div class="card-body p-1">
+               <a class="text-decoration-none text-reset" href="{{item.product.get_absolute_url}}">
+                 <p class="card-text pb-3">{{product.title}}</p>
+               </a>
+               <div class='form-outline d-flex justify-content-around'>
+                  <label class="form-label" for="typeNumber">Qty: </label>
+                  <input type="number" id="selectQty{{product.id}}" class="form-control ml-3" value="1" min="1" max="50" />
+              </div>
+              <div class='m-4'>
+               <button id="update-button" data-index="{{product.id}}" type="button"
+               class="btn btn-success btn-sm ml-5 update-button"><b>Update</b></button>
+               <button id="delete-button" data-index="{{product.id}}" type="button"
+               class="btn btn-warning btn-sm ml-2 delete-button"><b>Delete</b></button>
+              </div>
+             </div>
+           </div>
+         </div>
+       </div>
+       {% endwith %}
+       {% endfor %}
+     </div>
+     {% endif %}
+   </div>
+</div>
+
+
+
+   <script>
+      // Delete item function  
+      $(document).on('click', '.delete-button', function (e) {
+         console.log('button pressed');
+         e.preventDefault();
+
+         var prodid = $(this).data('index');
+
+         $.ajax({
+            type: 'POST',
+            url: '{% url "basket:basket-delete" %}',
+            data: {
+               productid: $(this).data('index'),
+               csrfmiddlewaretoken: "{{csrf_token}}",
+               action: 'post'
+            },
+            success: function (json) {
+               //console.log(prodid)
+               $('.product-item[data-index="' + prodid + '"]').remove();
+               document.getElementById("basketQty").innerHTML = json.qty
+               document.getElementById("subtotal").innerHTML = json.subTotal
+            },
+            error: function (xhr, errmsg, err) {}
+         });
+      });
+
+      // Update item function 
+      $(document).on('click', '.update-button', function (e) {
+         console.log('button pressed');
+         e.preventDefault();
+
+         var prodid = $(this).data('index');
+
+         $.ajax({
+            type: 'POST',
+            url: '{% url "basket:basket-update" %}',
+            data: {
+               productid: $(this).data('index'),
+               productqty: $('#selectQty' + prodid).val(),
+               csrfmiddlewaretoken: "{{csrf_token}}",
+               action: 'post'
+            },
+            success: function (json) {
+               document.getElementById("basketQty").innerHTML = json.qty
+               document.getElementById("subtotal").innerHTML = json.subTotal
+            },
+            error: function (xhr, errmsg, err) {}
+         });
+      });
+   </script>
+   {% endblock 'mainContent' %}

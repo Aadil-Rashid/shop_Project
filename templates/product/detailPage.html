@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+<!-- Title Of page -->
+{% block 'title' %}
+{% if product %}{{ product.title }}{% else %}Detail Page{% endif %}
+{% endblock 'title' %}
+
+
+<!-- my Main Content block -->
+{% block 'mainContent' %}
+
+<div class="container">
+    <div class="row g-3"> 
+
+        <div class="col-md-5 ps-3 col-lg-5 order-md-last p-0 order-1">
+            <div class="d-grip gap-2">
+                <div class="d-flex d-flex-inline justify-content-between">
+                    <div>
+                        <span class="h3"> ₹ {{ product.price }} </span>
+                        <p class="text-muted">(includes tax)</p>
+                    </div>
+                    <div class='form-outline'>
+                        <label class="form-label" for="typeNumber">Quantity: </label>
+                        <input type="number" id="selectQty" class="form-control" value="1" min="1" max="50" />
+                    </div>
+                </div>
+                <hr>
+                <button id="addButton" value="{{product.id}}" type="button" class="btn btn-success fw500"><b>Add to
+                    Cart</b></button>
+                <button id="add-to-wishlist" value="{{product.id}}" type="button" class="btn btn-success fw500"><b>Add
+                    to
+                    WishList</b></button>
+            </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-6 m-1" style="background-color: #d5cfdff3;">
+            <div class="card mb-3 border-0" style="background-color: #d5cfdff3; ">
+                <div class="row g-0">
+                    <div class="col-md-12">
+
+                        <div class="card-body p-1">
+                            <h1 class="mb-0 h2 pe-4 pb-4">{{ product.title }}</h1>
+                            <div style="background-color: #d5cfdff3;">
+                                <img src="{{ product.image.url }}" alt="Responsive Image" class="img-fluid mx-auto d-block" width="200px">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+            <!--    --------For getting the size ---------------
+                <select>
+                <option value="">Select Size</option>
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+                <option>XL</option>
+                <option>XXL</option>
+                <option>XXXL</option>
+            </select> -->
+            <!-- Input Text -->
+
+<script>
+    $(document).on('click', '#addButton', function (e) {
+        // console.log('button pressed');
+        e.preventDefault();
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "basket:basket-add" %}',
+            data: {
+                productid: $('#addButton').val(),
+                productQty: $('#selectQty').val(),
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                action: 'post'
+            },
+            // After successfully submiting post request; our success function works;
+            // which basically retuns the success response
+            success: function (json) {
+                document.getElementById("basketQty").innerHTML = json.qty
+            },
+            error: function (xhr, errmsg, err) {}
+        });
+    });
+</script>
+
+{% endblock 'mainContent' %}

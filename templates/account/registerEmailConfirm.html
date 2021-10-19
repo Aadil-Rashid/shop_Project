@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+<!-- Title Of page -->
+{% block 'title' %}Account Email Sent{% endblock 'title' %}
+{% block 'mainContent' %}
+
+
+<div class="container">
+    <div class='mb-5'>
+       
+        <h3 class="mb-4"> Account Email Sent</h3>
+        <p> Hello {{ userName|title }}, Account activation link has has been sent to you at '{{ userEmail }}' \nPlease take a moment to verify it, and only they you will be able to login.</p>
+        
+    </div>
+</div>
+
+{% endblock 'mainContent' %}

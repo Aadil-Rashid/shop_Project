@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+<!-- Title Of page -->
+{% block 'title' %}Payment Failed{% endblock 'title' %}
+
+{% block 'mainContent' %}
+<div class="container">
+    <div class="info">
+        <div class="container" style="text-align:center;">
+            <h1>Payment Failed</h1>
+            <h3>Sorry! Your payment has been failed. Please try again.</h3>
+            <br>
+            <p class="mainmessage">
+                In case your money has been deducted, money will be autorefunded in 7-10 days.
+            </p>
+            <br>
+            <p class="mainmessage">Thank You for choosing us. You can contact our <a href="#"><b>Backend team</b></a> for any queries or details.</p>
+        </div>
+    </div>
+</div>
+{% endblock 'mainContent' %}
